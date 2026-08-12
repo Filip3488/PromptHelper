@@ -1,7 +1,6 @@
 import os
 import re
 import duckdb
-import pyperclip
 import streamlit as st
 from collections import defaultdict
 from pathlib import Path
@@ -152,8 +151,5 @@ for tab, category in zip(category_tabs, categories):
                     filled = st.session_state.get(f"preview_edit_{st.session_state.active}", filled)
                 st.markdown(filled.replace("\n", "  \n"))
 
-            copy_col1, copy_col2 = st.columns([5, 1], vertical_alignment="center")
-            copy_col1.empty()
-            if copy_col2.button("Copy", key=f"copy_btn_{st.session_state.active}", use_container_width=True):
-                pyperclip.copy(filled)
-                st.toast("Copied to clipboard!")
+            with st.expander("Copy"):
+                st.code(filled, language=None)
