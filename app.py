@@ -27,7 +27,7 @@ def extract_variables(template: str) -> list[str]:
 
 
 def load_prompts() -> list[dict]:
-    con = duckdb.connect(CONN_STR, read_only=True)
+    con = duckdb.connect(CONN_STR)
     rows = con.execute(
         f"SELECT {C_ID}, {C_TITLE}, {C_CATEGORY}, {C_CONTENT}, {C_DESCRIPTION} "
         f"FROM {TABLE} ORDER BY {C_CATEGORY}, {C_TITLE}"
