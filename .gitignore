@@ -1,0 +1,14 @@
+# Secrets - never commit
+var.env
+.env
+.streamlit/secrets.toml
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Local DuckDB files
+*.duckdb
+*.duckdb.wal

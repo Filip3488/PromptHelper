@@ -6,18 +6,35 @@ from collections import defaultdict
 from pathlib import Path
 from dotenv import load_dotenv
 
+st.set_page_config(page_title="Prompt Helper", layout="centered")
+
 load_dotenv(Path(__file__).parent / "var.env")
 
-TOKEN    = os.environ["MOTHERDUCK_TOKEN"]
-DATABASE = os.getenv("MD_DATABASE", "PromptHelper")
-TABLE    = os.getenv("MD_TABLE", "prompts")
 
-C_ID          = os.getenv("COL_ID",          "id")
-C_TITLE       = os.getenv("COL_TITLE",       "title")
-C_CATEGORY    = os.getenv("COL_CATEGORY",    "category")
-C_CONTENT     = os.getenv("COL_CONTENT",     "content")
-C_DESCRIPTION = os.getenv("COL_DESCRIPTION", "description")
-C_CREATED_AT  = os.getenv("COL_CREATED_AT",  "created_at")
+def cfg(key: str, default: str | None = None) -> str | None:
+    """Read config from Streamlit secrets (cloud) or env/var.env (local)."""
+    try:
+        if key in st.secrets:
+            return st.secrets[key]
+    except Exception:
+        pass
+    return os.getenv(key, default)
+
+
+TOKEN    = cfg("MOTHERDUCK_TOKEN")
+DATABASE = cfg("MD_DATABASE", "PromptHelper")
+TABLE    = cfg("MD_TABLE", "prompts")
+
+C_ID          = cfg("COL_ID",          "id")
+C_TITLE       = cfg("COL_TITLE",       "title")
+C_CATEGORY    = cfg("COL_CATEGORY",    "category")
+C_CONTENT     = cfg("COL_CONTENT",     "content")
+C_DESCRIPTION = cfg("COL_DESCRIPTION", "description")
+C_CREATED_AT  = cfg("COL_CREATED_AT",  "created_at")
+
+if not TOKEN:
+    st.error("MOTHERDUCK_TOKEN is not set. Add it to Streamlit secrets or var.env.")
+    st.stop()
 
 CONN_STR = f"md:{DATABASE}?motherduck_token={TOKEN}"
 
@@ -36,8 +53,8 @@ def load_prompts() -> list[dict]:
     return [{"id": r[0], "title": r[1], "category": r[2], "body": r[3], "description": r[4]} for r in rows]
 
 
-st.set_page_config(page_title="Prompt Helper", layout="centered")
 st.title("Prompt Helper")
+
 st.markdown("<div style='margin-bottom: 2rem'></div>", unsafe_allow_html=True)
 
 st.markdown("""
