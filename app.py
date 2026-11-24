@@ -22,7 +22,7 @@ def cfg(key: str, default: str | None = None) -> str | None:
 
 
 TOKEN    = cfg("MOTHERDUCK_TOKEN")
-DATABASE = cfg("MD_DATABASE", "PromptHelper")
+DATABASE = cfg("MD_DATABASE", "Prompts")
 TABLE    = cfg("MD_TABLE", "prompts")
 
 C_ID          = cfg("COL_ID",          "id")
